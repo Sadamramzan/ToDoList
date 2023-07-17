@@ -26,10 +26,14 @@ const TodoList = () => {
     setInputValue(e.target.value);
   };
 
-  const handleOnkeypress = (e) => {
-    console.log(e.key, "====================================");
-    if (e.key === "Enter") {
-      handleAddTodo() || handleUpdateTodo();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (editingItemId !== null) {
+      handleUpdateTodo();
+      console.log("handleUpdateTodo");
+    } else {
+      handleAddTodo();
+      console.log("handleAddTodo");
     }
   };
 
@@ -79,7 +83,7 @@ const TodoList = () => {
     setTodos((oldTodos) => {
       const updatedTodos = [...oldTodos];
       updatedTodos[getdata].isComplete = !updatedTodos[getdata].isComplete;
-      console.log(updatedTodos[getdata], "updatedTodosupdatedTodos");
+
       return updatedTodos;
     });
   };
@@ -91,18 +95,20 @@ const TodoList = () => {
 
   return (
     <Box>
-      <input
-        type="text"
-        value={inputValue}
-        onChange={handleInputChange}
-        onKeyPress={handleOnkeypress}
-        placeholder="Enter a todo..."
-      />
-      {editingItemId !== null ? (
-        <Button onClick={handleUpdateTodo}>Update</Button>
-      ) : (
-        <Button onClick={handleAddTodo}>Add</Button>
-      )}
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          placeholder="Enter a todo..."
+        />
+
+        {editingItemId !== null ? (
+          <Button onClick={handleUpdateTodo}>Update</Button>
+        ) : (
+          <Button onClick={handleAddTodo}>Add</Button>
+        )}
+      </form>
       <ul>
         {todos.map((todo) => (
           <li key={todo.id}>
